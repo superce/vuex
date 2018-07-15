@@ -1,24 +1,31 @@
+import axios from 'axios'
 const state = {
-  all: [
-    {
-      id: "1",
-      body: "pinglun1"
-    },
-    {
-      id: "2",
-      body: "pinglun2"
-    }
-  ]
+  all: []
 }
 const mutations = {
-  addComment(state, comment) {
-    state.all.push(comment)
-  }
+  loadComments(state, comments) {
+    // state.all.push(comment)
+    state.all = comments
+  },
 }
 const actions = {
   addComment({commit},{comment}){
-    commit('addComment',comment)
+    var url = 'http://localhost:3008/comments'
+    axios.post(url,comment).then(
+      res => {
+        const data = res.data
+        commit('addComment', data)
+      }  
+    )
+  },
+  loadComments({commit}){
+    const url = 'http://localhost:3008/comments'
+    axios.get(url).then(res => {
+      let comments = res.data;
+      commit('loadComments',comments)
+    })
   }
+
 }
 export default {
   state,
